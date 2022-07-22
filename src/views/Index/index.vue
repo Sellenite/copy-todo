@@ -163,7 +163,7 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       box-shadow: 0px 0px 2px 2px rgba(104, 119, 255, 0.5);
-      /deep/ .van-icon {
+      :deep(.van-icon) {
         font-size: 30px;
         color: #fff;
       }
