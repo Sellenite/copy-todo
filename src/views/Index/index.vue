@@ -6,7 +6,10 @@
         <template #left>
           <van-button square type="danger" text="删除" @click="handleDeleteItem(item)" />
         </template>
-        <div class="item" @click="handleClickItem(item)">{{ item.title }}</div>
+        <div class="item" @click="handleClickItem(item)">
+          <div class="title">{{ item.title }}</div>
+          <div class="time">{{ formatDate(item.id) }}</div>
+        </div>
         <template #right>
           <van-button square type="primary" text="复制内容" @click="handleCopyDetail(item)" />
         </template>
@@ -29,6 +32,8 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import 'vant/es/toast/style'
 import useClipboard from 'vue-clipboard3'
+import _ from 'lodash'
+import dayjs from 'dayjs'
 
 export default defineComponent({
   name: 'PageIndex',
@@ -41,7 +46,13 @@ export default defineComponent({
     const { toClipboard } = useClipboard()
     const router = useRouter()
     const store = useStore()
-    const todoList = computed(() => store.state.todoList)
+    const todoList = computed(() => {
+      const array = _.cloneDeep(store.state.todoList)
+      array.sort((a, b) => {
+        return b.id - a.id
+      })
+      return array
+    })
 
     const handleClickItem = (item) => {
       router.push({
@@ -75,11 +86,16 @@ export default defineComponent({
       })
     }
 
+    const formatDate = (timestamp) => {
+      return dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss')
+    }
+
     return {
       toDetail,
       handleClickItem,
       handleDeleteItem,
       handleCopyDetail,
+      formatDate,
       todoList,
     }
   },
@@ -105,6 +121,14 @@ export default defineComponent({
       white-space: nowrap;
       text-overflow: ellipsis;
       margin-bottom: 10px;
+      .title {
+        font-size: 16px;
+        margin-bottom: 6px;
+      }
+      .time {
+        font-size: 12px;
+        color: #a3a3a3;
+      }
       &:last-of-type {
         margin-bottom: 0;
       }

@@ -6,7 +6,7 @@ const TODO_LIST_KEY = '__TODO_LIST__'
 interface TodoItem {
   title: string
   detail: string
-  id: string
+  id: string | number
 }
 
 export default createStore({
